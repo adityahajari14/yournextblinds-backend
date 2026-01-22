@@ -115,18 +115,42 @@ export const getPriceMatrix = async (
   try {
     const { productId } = req.params;
 
-    // Get product to find its price band
-    const product = await pricingService.getPriceBandByName('Band A'); // Default to Band A for now
-    
-    if (!product) {
-      res.status(404).json({
+    if (!productId) {
+      res.status(400).json({
         success: false,
-        error: { message: 'Price band not found' },
+        error: { message: 'productId is required' },
       });
       return;
     }
 
-    const matrix = await pricingService.getPriceBandMatrix(product.id);
+    // Get product to find its price band
+    const product = await pricingService.getProductWithPriceBand(productId);
+    
+    if (!product) {
+      res.status(404).json({
+        success: false,
+        error: { message: 'Product not found' },
+      });
+      return;
+    }
+
+    if (!product.priceBandId || !product.priceBand) {
+      res.status(404).json({
+        success: false,
+        error: { message: 'Product does not have a price band assigned' },
+      });
+      return;
+    }
+
+    const matrix = await pricingService.getPriceBandMatrix(product.priceBandId);
+
+    if (!matrix) {
+      res.status(404).json({
+        success: false,
+        error: { message: 'Price matrix not found for this product' },
+      });
+      return;
+    }
 
     res.status(200).json({
       success: true,

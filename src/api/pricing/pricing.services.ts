@@ -326,6 +326,18 @@ export async function getPriceBandByName(name: string) {
 }
 
 /**
+ * Get product with its price band
+ */
+export async function getProductWithPriceBand(productId: string) {
+  return prisma.product.findUnique({
+    where: { id: productId },
+    include: {
+      priceBand: true,
+    },
+  });
+}
+
+/**
  * Validate cart price
  * Returns true if the calculated price matches the submitted price (within tolerance)
  */

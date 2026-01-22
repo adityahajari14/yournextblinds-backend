@@ -13,6 +13,7 @@
     "seed:pricing": "tsx prisma/seedPricing.ts",
     "extract:categories": "tsx src/db/extractUniqueCategories.ts",
     "extract:tags": "tsx src/db/extractUniqueTags.ts",
+    "extract:shopify": "tsx src/db/extractShopifyProduct.ts",
     "import:products": "tsx src/db/importProducts.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +24,8 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
@@ -30,6 +33,7 @@
     "prisma": "^7.1.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.35",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
