@@ -28,6 +28,8 @@ model Product {
   tags        Tags[]
   priceBandId String?
   priceBand   PriceBand?              @relation(fields: [priceBandId], references: [id])
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
 }
 
 model Category {
