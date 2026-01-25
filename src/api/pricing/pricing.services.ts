@@ -180,7 +180,7 @@ export async function calculateProductPrice(request: PricingRequest): Promise<Pr
       if (option && option.pricingEntries.length > 0) {
         // Prefer width-specific pricing, fall back to fixed pricing
         const pricing = option.pricingEntries.find(p => p.widthBandId === widthBand.id) ||
-                       option.pricingEntries.find(p => p.widthBandId === null);
+          option.pricingEntries.find(p => p.widthBandId === null);
 
         if (pricing) {
           customizationPrices.push({
@@ -196,7 +196,12 @@ export async function calculateProductPrice(request: PricingRequest): Promise<Pr
 
   // Calculate total price
   const customizationTotal = customizationPrices.reduce((sum, c) => sum + c.price, 0);
-  const totalPrice = dimensionPrice + customizationTotal;
+
+  // Add motorization base price if applicable
+  const hasMotorization = request.customizations?.some(c => c.category === 'motorization');
+  const motorizationBasePrice = hasMotorization ? 95 : 0;
+
+  const totalPrice = dimensionPrice + customizationTotal + motorizationBasePrice;
 
   return {
     basePrice,
@@ -348,7 +353,7 @@ export async function validateCartPrice(
 ): Promise<{ valid: boolean; calculatedPrice: number; difference: number }> {
   const pricing = await calculateProductPrice(request);
   const difference = Math.abs(pricing.totalPrice - submittedPrice);
-  
+
   return {
     valid: difference <= tolerance,
     calculatedPrice: pricing.totalPrice,
