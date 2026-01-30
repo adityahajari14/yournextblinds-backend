@@ -125,7 +125,7 @@ function extractFromJsonLd(jsonLdData: any[]): Partial<ExtractedProduct> {
           if (mainOffer) {
             // JSON-LD prices are usually in correct format (pounds/dollars), but normalize just in case
             product.price = normalizePrice(parseFloat(mainOffer.price)) || product.price;
-            product.currency = mainOffer.priceCurrency || product.currency || 'GBP';
+            product.currency = mainOffer.priceCurrency || product.currency || 'USD';
             // Check for old price in offer (some schemas include priceSpecification or listPrice)
             if (mainOffer.priceSpecification?.value) {
               product.originalPrice = normalizePrice(parseFloat(mainOffer.priceSpecification.value));
@@ -252,7 +252,7 @@ function extractFromMetaTags($: cheerio.Root): Partial<ExtractedProduct> {
   const priceMeta = $('meta[property="product:price:amount"]').attr('content');
   if (priceMeta) {
     product.price = parseFloat(priceMeta);
-    product.currency = $('meta[property="product:price:currency"]').attr('content') || 'GBP';
+    product.currency = $('meta[property="product:price:currency"]').attr('content') || 'USD';
   }
 
   return product;
@@ -1394,7 +1394,7 @@ export async function extractShopifyProduct(url: string): Promise<ExtractedProdu
       slug,
       canonicalUrl: url,
       price: 0,
-      currency: 'GBP',
+      currency: 'USD',
       images: [],
       videos: [], // Added videos property
       variants: [],
